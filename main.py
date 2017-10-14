@@ -10,8 +10,10 @@ from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
 from kivy.properties import StringProperty
 from kivy.clock import Clock
-import datetime
+from datetime import datetime
 import requests
+import pytz
+import math 
 from bs4 import BeautifulSoup
 
 
@@ -26,12 +28,12 @@ class Counter_Timer(BoxLayout):
 
 
     def update(self, dt):
-        url = 'http://www.realmadrid.com/en/football/schedule'
+        
+        page = requests.get('http://www.realmadrid.com/en/football/schedule')
+        #print (page.status_code)
 
-        r = requests.get(url)
-        r.raise_for_status()
 
-        soup = BeautifulSoup(r.content,'html.parser')
+        soup = BeautifulSoup(page.content,'html.parser')
 
         name = soup.find("header", {"class": "m_highlighted_next_game_header"}).span.contents
         date = soup.find("header",{"class": "m_highlighted_next_game_header"}).time.contents
@@ -44,22 +46,22 @@ class Counter_Timer(BoxLayout):
 
         time = soup.find("div",{"class": "m_highlighted_next_game_info_wrapper"}).time.contents
 
-        time1 = time[0]
-        hour = int(time1[:2])+5
-        minute = int(time1[3:5])
-        d = date[0]
-        day = int(d[8:10])
-        year = int(d[:4])
-        month = int(d[5:7])
-        n_day = day
-        n_hour = hour
-        if hour>23 and day==n_day:
-            n_hour = hour-24
-            n_day = day+1
+        time = "".join(time)
+        time = time.strip('H.')
+        hour, minute = time.split(':')
+        date = "".join(date)
+        month,day,year = date.split('/')
 
-        start = datetime.datetime.now()
-        end = datetime.datetime(year = year, month = month, day = n_day, hour = n_hour, minute = minute)
-        diff  = end - start
+        match_time = datetime(int(year), int(month), int(day), int(hour), int(minute))
+
+        sp_tz = pytz.timezone('Europe/Madrid')
+
+        match_time = sp_tz.localize(match_time)
+
+        now_sp = datetime.now(tz=pytz.timezone('Europe/Madrid'))
+
+        diff = match_time - now_sp
+
         delta = diff
         a = 1
         if delta.days == 0:
