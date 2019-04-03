@@ -3,7 +3,7 @@ Real Madrid Countdown
 
 ## Getting Started
 
-This is a python2 script with kivy gui which creates a countdown of Real Madrid's upcoming match and also shows some relevent informations. 
+This is a python3 script with kivy gui which creates a countdown of Real Madrid's upcoming match and also shows some relevent informations. 
 
 ### Prerequisities
 install requests
@@ -20,7 +20,7 @@ install kivy
 ```
 $ sudo add-apt-repository ppa:kivy-team/kivy
 $ sudo apt-get update
-$ sudo apt-get install python-kivy
+$ sudo apt-get install python3-kivy
 ```
 ## Version 
 * Version 0.1
@@ -28,7 +28,7 @@ $ sudo apt-get install python-kivy
 ##Test
 run main.py
 ```
-python main.py
+python3 main.py
 ```
 ![ScreenShot](rcountdown.png) 
 
